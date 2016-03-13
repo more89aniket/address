@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\address\Tests\Formatter\DefaultFormatterTest.
- */
-
 namespace Drupal\address\Tests\Formatter;
 
 use Drupal\Component\Utility\Unicode;

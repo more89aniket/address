@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\address\LabelHelper.
- */
-
 namespace Drupal\address;
 
 use CommerceGuys\Addressing\Enum\AddressField;

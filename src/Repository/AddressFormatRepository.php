@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\address\Repository\AddressFormatRepository.
- */
-
 namespace Drupal\address\Repository;
 
 use CommerceGuys\Addressing\Repository\AddressFormatRepositoryInterface;

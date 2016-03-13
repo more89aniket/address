@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\address\PluginDefinition\ZoneMemberPluginDefinitionDecorator.
- */
-
 namespace Drupal\address\PluginDefinition;
 
 use Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator;

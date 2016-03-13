@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\address\Tests\AddressDefaultWidgetTest.
- */
-
 namespace Drupal\address\Tests;
 
 use Drupal\field\Entity\FieldConfig;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\address\Plugin\Field\FieldWidget\AddressDefaultWidget.
- */
-
 namespace Drupal\address\Plugin\Field\FieldWidget;
 
 use CommerceGuys\Addressing\Enum\AddressField;

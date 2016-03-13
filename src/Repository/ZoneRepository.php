@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\address\Repository\ZoneRepository.
- */
-
 namespace Drupal\address\Repository;
 
 use CommerceGuys\Zone\Repository\ZoneRepositoryInterface;

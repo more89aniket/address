@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\address\AddressFormatImporter.
- */
-
 namespace Drupal\address;
 
 use CommerceGuys\Addressing\Repository\AddressFormatRepository;

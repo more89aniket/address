@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\address\Form\ZoneForm.
- */
-
 namespace Drupal\address\Form;
 
 use Drupal\address\ZoneMemberManager;

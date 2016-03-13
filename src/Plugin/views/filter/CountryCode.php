@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\address\Plugin\views\filter\CountryCode.
- */
-
 namespace Drupal\address\Plugin\views\filter;
 
 use CommerceGuys\Addressing\Repository\CountryRepositoryInterface;

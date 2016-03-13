@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\address\Event\InitialValuesEvent.
- */
-
 namespace Drupal\address\Event;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
