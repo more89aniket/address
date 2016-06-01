@@ -76,6 +76,13 @@ class ZoneMemberZone extends ZoneMemberBase implements ContainerFactoryPluginInt
       '#target_type' => 'zone',
       '#tags' => FALSE,
       '#required' => TRUE,
+      '#selection_settings' => [
+        'skip_id' => $this->parentZone->id(),
+        'sort' => [
+          'field' => 'name',
+          'direction' => 'ASC',
+        ],
+      ],
     ];
 
     return $form;

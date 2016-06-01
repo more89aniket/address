@@ -205,12 +205,9 @@ class ZoneForm extends EntityForm {
    */
   public function addMemberSubmit(array $form, FormStateInterface $form_state) {
     $plugin_id = $form_state->getValue('plugin');
+    $weight = count($this->entity->getMembers());
     /** @var \Drupal\address\Plugin\ZoneMember\ZoneMemberInterface $member */
-    $member = $this->memberManager->createInstance($plugin_id);
-    // @todo Clean up once zone members get a setWeight() method.
-    $configuration = $member->getConfiguration();
-    $configuration['weight'] = count($this->entity->getMembers());
-    $member->setConfiguration($configuration);
+    $member = $this->memberManager->createInstance($plugin_id, ['weight' => $weight], $this->entity);
     $this->entity->addMember($member);
     $form_state->setRebuild();
   }
