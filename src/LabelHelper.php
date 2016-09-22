@@ -142,6 +142,7 @@ class LabelHelper {
       LocalityType::CITY => t('City', [], ['context' => 'Address label']),
       LocalityType::DISTRICT => t('District', [], ['context' => 'Address label']),
       LocalityType::POST_TOWN => t('Post town', [], ['context' => 'Address label']),
+      LocalityType::SUBURB => t('Suburb', [], ['context' => 'Address label']),
     ];
   }
 
@@ -176,6 +177,7 @@ class LabelHelper {
       DependentLocalityType::NEIGHBORHOOD => t('Neighborhood', [], ['context' => 'Address label']),
       DependentLocalityType::VILLAGE_TOWNSHIP => t('Village township', [], ['context' => 'Address label']),
       DependentLocalityType::SUBURB => t('Suburb', [], ['context' => 'Address label']),
+      DependentLocalityType::TOWNLAND => t('Townland', [], ['context' => 'Address label']),
     ];
   }
 
