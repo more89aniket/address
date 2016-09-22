@@ -2,7 +2,7 @@
 
 namespace Drupal\address;
 
-use CommerceGuys\Addressing\Enum\AddressField;
+use CommerceGuys\Addressing\AddressFormat\AddressField;
 
 /**
  * Provides property names and autocomplete attributes for AddressField values.

@@ -8,6 +8,16 @@ namespace Drupal\address\Event;
 final class AddressEvents {
 
   /**
+   * Name of the event fired when altering an address format.
+   *
+   * @Event
+   *
+   * @see \Drupal\address\Event\AddressFormatDefinitionEvent
+   * @see \CommerceGuys\Addressing\AddressFormat\AddressFormat
+   */
+  const ADDRESS_FORMAT = 'address.address_format';
+
+  /**
    * Name of the event fired when altering the list of available countries.
    *
    * @Event

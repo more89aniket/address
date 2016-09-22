@@ -2,7 +2,7 @@
 
 namespace Drupal\address\Repository;
 
-use CommerceGuys\Addressing\Repository\SubdivisionRepository as ExternalSubdivisionRepository;
+use CommerceGuys\Addressing\Subdivision\SubdivisionRepository as ExternalSubdivisionRepository;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 

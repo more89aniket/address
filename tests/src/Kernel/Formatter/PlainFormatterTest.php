@@ -65,13 +65,6 @@ class PlainFormatterTest extends KernelTestBase {
 
     ConfigurableLanguage::createFromLangcode('zh-hant')->save();
 
-    // The address module is never installed, so the importer doesn't run
-    // automatically. Instead, we manually import the address formats we need.
-    $country_codes = ['AD', 'SV', 'TW', 'US', 'ZZ'];
-    $importer = \Drupal::service('address.address_format_importer');
-    $importer->importEntities($country_codes);
-    $importer->importTranslations(['zh-hant']);
-
     $this->entityType = 'entity_test';
     $this->bundle = $this->entityType;
     $this->fieldName = Unicode::strtolower($this->randomMachineName());

@@ -2,7 +2,7 @@
 
 namespace Drupal\address\Plugin\Field\FieldType;
 
-use CommerceGuys\Addressing\Enum\AddressField;
+use CommerceGuys\Addressing\AddressFormat\AddressField;
 use Drupal\address\Event\AddressEvents;
 use Drupal\address\Event\AvailableCountriesEvent;
 use Drupal\address\AddressInterface;

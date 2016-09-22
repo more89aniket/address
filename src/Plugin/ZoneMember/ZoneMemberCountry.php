@@ -2,13 +2,13 @@
 
 namespace Drupal\address\Plugin\ZoneMember;
 
-use CommerceGuys\Addressing\Enum\AddressField;
-use CommerceGuys\Addressing\Model\AddressInterface;
-use CommerceGuys\Addressing\Repository\AddressFormatRepositoryInterface;
-use CommerceGuys\Addressing\Repository\CountryRepositoryInterface;
-use CommerceGuys\Addressing\Repository\SubdivisionRepositoryInterface;
+use CommerceGuys\Addressing\AddressInterface;
+use CommerceGuys\Addressing\AddressFormat\AddressField;
+use CommerceGuys\Addressing\AddressFormat\AddressFormat;
+use CommerceGuys\Addressing\AddressFormat\AddressFormatRepositoryInterface;
+use CommerceGuys\Addressing\Country\CountryRepositoryInterface;
+use CommerceGuys\Addressing\Subdivision\SubdivisionRepositoryInterface;
 use CommerceGuys\Zone\PostalCodeHelper;
-use Drupal\address\Entity\AddressFormatInterface;
 use Drupal\address\FieldHelper;
 use Drupal\address\LabelHelper;
 use Drupal\Core\Form\FormStateInterface;
@@ -37,7 +37,7 @@ class ZoneMemberCountry extends ZoneMemberBase implements ContainerFactoryPlugin
   /**
    * The country repository.
    *
-   * @var \CommerceGuys\Addressing\Repository\CountryRepositoryInterface
+   * @var \CommerceGuys\Addressing\Country\CountryRepositoryInterface
    */
   protected $countryRepository;
 
@@ -59,7 +59,7 @@ class ZoneMemberCountry extends ZoneMemberBase implements ContainerFactoryPlugin
    *   The plugin implementation definition.
    * @param \CommerceGuys\Addressing\Repository\AddressFormatRepositoryInterface $address_format_repository
    *   The address format repository.
-   * @param \CommerceGuys\Addressing\Repository\CountryRepositoryInterface $country_repository
+   * @param \CommerceGuys\Addressing\Country\CountryRepositoryInterface $country_repository
    *   The country repository.
    * @param \CommerceGuys\Addressing\Repository\SubdivisionRepositoryInterface $subdivision_repository
    *   The subdivision repository.
@@ -151,14 +151,14 @@ class ZoneMemberCountry extends ZoneMemberBase implements ContainerFactoryPlugin
    *   The form.
    * @param array $values
    *   The form values.
-   * @param \Drupal\address\Entity\AddressFormatInterface $address_format
+   * @param \CommerceGuys\Addressing\AddressFormat\AddressFormat $address_format
    *  The address format for the selected country.
    *
    * @return array
    *   The form with the added subdivision elements.
    */
-  protected function buildSubdivisionElements(array $form, array $values, AddressFormatInterface $address_format) {
-    $depth = $this->subdivisionRepository->getDepth($values['country_code']);
+  protected function buildSubdivisionElements(array $form, array $values, AddressFormat $address_format) {
+    $depth = $address_format->getSubdivisionDepth();
     if ($depth === 0) {
       // No predefined data found.
       return $form;
@@ -207,13 +207,13 @@ class ZoneMemberCountry extends ZoneMemberBase implements ContainerFactoryPlugin
    *   The form.
    * @param array $values
    *   The form values.
-   * @param \Drupal\address\Entity\AddressFormatInterface $address_format
+   * @param \CommerceGuys\Addressing\AddressFormat\AddressFormat $address_format
    *  The address format for the selected country.
    *
    * @return array
    *   The form with the added postal code elements.
    */
-  protected function buildPostalCodeElements(array $form, array $values, AddressFormatInterface $address_format) {
+  protected function buildPostalCodeElements(array $form, array $values, AddressFormat $address_format) {
     if (!in_array(AddressField::POSTAL_CODE, $address_format->getUsedFields())) {
       // The address format doesn't use a postal code field.
       return $form;

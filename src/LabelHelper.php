@@ -2,12 +2,12 @@
 
 namespace Drupal\address;
 
-use CommerceGuys\Addressing\Enum\AddressField;
-use CommerceGuys\Addressing\Enum\AdministrativeAreaType;
-use CommerceGuys\Addressing\Enum\DependentLocalityType;
-use CommerceGuys\Addressing\Enum\LocalityType;
-use CommerceGuys\Addressing\Enum\PostalCodeType;
-use Drupal\address\Entity\AddressFormatInterface;
+use CommerceGuys\Addressing\AddressFormat\AddressField;
+use CommerceGuys\Addressing\AddressFormat\AdministrativeAreaType;
+use CommerceGuys\Addressing\AddressFormat\DependentLocalityType;
+use CommerceGuys\Addressing\AddressFormat\LocalityType;
+use CommerceGuys\Addressing\AddressFormat\PostalCodeType;
+use CommerceGuys\Addressing\AddressFormat\AddressFormat;
 
 /**
  * Provides translated labels for the library enums.
@@ -21,13 +21,13 @@ class LabelHelper {
    * term than the field name (Company instead of Organization, Contact name
    * instead of Recipient, etc).
    *
-   * @param \Drupal\address\Entity\AddressFormatInterface $address_format
+   * @param \CommerceGuys\Addressing\AddressFormat\AddressFormat $address_format
    *   The address format.
    *
    * @return string[]
    *   An array of labels, keyed by field.
    */
-  public static function getFieldLabels(AddressFormatInterface $address_format) {
+  public static function getFieldLabels(AddressFormat $address_format) {
     $administrative_area_type = $address_format->getAdministrativeAreaType();
     $locality_type = $address_format->getLocalityType();
     $dependent_locality_type = $address_format->getDependentLocalityType();
