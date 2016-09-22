@@ -170,10 +170,10 @@ class AddressDefaultWidget extends WidgetBase implements ContainerFactoryPluginI
   public function settingsSummary() {
     $default_country = $this->getSetting('default_country');
     if (empty($default_country)) {
-      $default_country = t('None');
+      $default_country = $this->t('None');
     }
     elseif ($default_country == 'site_default') {
-      $default_country = t('Site default');
+      $default_country = $this->t('Site default');
     }
     else {
       $country_list = $this->countryRepository->getList();
