@@ -180,7 +180,8 @@ class AddressDefaultWidgetTest extends WebTestBase {
     // Create an article with one of them.
     $address = [
       'country_code' => 'US',
-      'recipient' => 'Some Recipient',
+      'given_name' => 'John',
+      'family_name' => 'Smith',
       'organization' => 'Some Organization',
       'address_line1' => '1098 Alta Ave',
       'locality' => 'Mountain View',
@@ -211,7 +212,8 @@ class AddressDefaultWidgetTest extends WebTestBase {
     // 'US' should be in the list along with the available countries and should
     // be selected.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldByName($field_name . '[0][recipient]', $address['recipient']);
+    $this->assertFieldByName($field_name . '[0][given_name]', $address['given_name']);
+    $this->assertFieldByName($field_name . '[0][family_name]', $address['family_name']);
     $this->assertFieldByName($field_name . '[0][organization]', $address['organization']);
     $this->assertFieldByName($field_name . '[0][address_line1]', $address['address_line1']);
     $this->assertFieldByName($field_name . '[0][locality]', $address['locality']);
@@ -233,7 +235,8 @@ class AddressDefaultWidgetTest extends WebTestBase {
     // Submitting the form should result in no data loss.
     $this->drupalPostForm(NULL, [], t('Save'));
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldByName($field_name . '[0][recipient]', $address['recipient']);
+    $this->assertFieldByName($field_name . '[0][given_name]', $address['given_name']);
+    $this->assertFieldByName($field_name . '[0][family_name]', $address['family_name']);
     $this->assertFieldByName($field_name . '[0][organization]', $address['organization']);
     $this->assertFieldByName($field_name . '[0][address_line1]', $address['address_line1']);
     $this->assertFieldByName($field_name . '[0][locality]', $address['locality']);
@@ -287,7 +290,8 @@ class AddressDefaultWidgetTest extends WebTestBase {
       'addressLine1' => $field_name . '[0][address_line1]',
       'addressLine2' => $field_name . '[0][address_line2]',
       'organization' => $field_name . '[0][organization]',
-      'recipient' => $field_name . '[0][recipient]',
+      'givenName' => $field_name . '[0][given_name]',
+      'familyName' => $field_name . '[0][family_name]',
     ];
     $allFieldsKeys = array_keys($allFields);
 
@@ -312,8 +316,8 @@ class AddressDefaultWidgetTest extends WebTestBase {
       $this->assertFieldValues($usedFields, $formFields, 'Expected fields ' . implode(', ', $usedFields) . ' exists for country ' . $country . ", only found " . implode(', ', $formFields));
     }
 
-    // Disable the recipient and postal code fields.
-    $disabledFields = ['recipient', 'postalCode'];
+    // Disable the name and postal code fields.
+    $disabledFields = ['givenName', 'familyName', 'postalCode'];
     $edit = [];
     foreach ($allFieldsKeys as $field) {
       $edit['settings[fields][' . $field . ']'] = !in_array($field, $disabledFields);
@@ -383,7 +387,8 @@ class AddressDefaultWidgetTest extends WebTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit[$field_name . '[0][country_code]'] = 'US';
-    $edit[$field_name . '[0][recipient]'] = 'Some Recipient';
+    $edit[$field_name . '[0][given_name]'] = 'John';
+    $edit[$field_name . '[0][family_name]'] = 'Smith';
     $edit[$field_name . '[0][organization]'] = 'Some Organization';
     $edit[$field_name . '[0][address_line1]'] = '1098 Alta Ave';
     $edit[$field_name . '[0][address_line2]'] = 'Street 2';

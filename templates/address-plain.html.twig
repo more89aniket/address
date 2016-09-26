@@ -4,7 +4,9 @@
  * Default template for the 'plain' address formatter.
  *
  * Available variables:
- *   - recipient: Recipient.
+ *   - given_name: Given name.
+ *   - additional_name: Additional name.
+ *   - family_name: Family name.
  *   - organization: Organization.
  *   - address_line1: First address line.
  *   - address_line2: Second address line.
@@ -31,8 +33,8 @@
  */
 #}
 <p class="address" translate="no">
-  {% if recipient %}
-    {{ recipient }} <br>
+  {% if given_name or family_name %}
+    {{ given_name }} {{ family_name }} <br>
   {% endif %}
   {% if organization %}
     {{ organization }} <br>
