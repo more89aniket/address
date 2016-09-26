@@ -265,19 +265,25 @@ class AddressDefaultFormatter extends FormatterBase implements ContainerFactoryP
       $values[$field] = $address->$getter();
     }
 
-    // Replace the subdivision values with the names of any predefined ones.
-    foreach ($address_format->getUsedSubdivisionFields() as $field) {
+    $original_values = [];
+    $subdivision_fields = $address_format->getUsedSubdivisionFields();
+    $parents = [];
+    foreach ($subdivision_fields as $index => $field) {
       if (empty($values[$field])) {
         // This level is empty, so there can be no sublevels.
         break;
       }
-      $subdivision = $this->subdivisionRepository->get($values[$field], $address->getLocale());
+      $parents[] = $index ? $original_values[$subdivision_fields[$index - 1]] : $address->getCountryCode();
+      $subdivision = $this->subdivisionRepository->get($values[$field], $parents);
       if (!$subdivision) {
-        // This level has no predefined subdivisions, stop.
         break;
       }
 
-      $values[$field] = $subdivision->getCode();
+      // Remember the original value so that it can be used for $parents.
+      $original_values[$field] = $values[$field];
+      // Replace the value with the expected code.
+      $use_local_name = LocaleHelper::match($address->getLocale(), $subdivision->getLocale());
+      $values[$field] = $use_local_name ? $subdivision->getLocalCode() : $subdivision->getCode();
       if (!$subdivision->hasChildren()) {
         // The current subdivision has no children, stop.
         break;

@@ -454,16 +454,17 @@ class AddressDefaultWidget extends WidgetBase implements ContainerFactoryPluginI
     }
     // Load and insert the subdivisions for each parent id.
     $currentDepth = 1;
+    $parents = [];
     foreach ($subdivision_properties as $index => $property) {
       if (!isset($element[$property]) || !Element::isVisibleElement($element[$property])) {
         break;
       }
-      $parent_property = $index ? $subdivision_properties[$index - 1] : NULL;
+      $parent_property = $index ? $subdivision_properties[$index - 1] : 'country_code';
       if ($parent_property && empty($values[$parent_property])) {
         break;
       }
-      $parent_id = $parent_property ? $values[$parent_property] : NULL;
-      $subdivisions = $this->subdivisionRepository->getList($values['country_code'], $parent_id);
+      $parents[] = $values[$parent_property];
+      $subdivisions = $this->subdivisionRepository->getList($parents);
       if (empty($subdivisions)) {
         break;
       }

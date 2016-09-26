@@ -167,15 +167,16 @@ class ZoneMemberCountry extends ZoneMemberBase implements ContainerFactoryPlugin
     $labels = LabelHelper::getFieldLabels($address_format);
     $subdivision_fields = $address_format->getUsedSubdivisionFields();
     $current_depth = 1;
+    $parents = [];
     foreach ($subdivision_fields as $index => $field) {
       $property = FieldHelper::getPropertyName($field);
-      $parent_property = $index ? FieldHelper::getPropertyName($subdivision_fields[$index - 1]) : NULL;
+      $parent_property = $index ? FieldHelper::getPropertyName($subdivision_fields[$index - 1]) : 'country_code';
       if ($parent_property && empty($values[$parent_property])) {
         // No parent value selected.
         break;
       }
-      $parent_id = $parent_property ? $values[$parent_property] : NULL;
-      $subdivisions = $this->subdivisionRepository->getList($values['country_code'], $parent_id);
+      $parents[] = $values[$parent_property];
+      $subdivisions = $this->subdivisionRepository->getList($parents);
       if (empty($subdivisions)) {
         break;
       }

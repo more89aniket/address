@@ -6,6 +6,7 @@ use CommerceGuys\Addressing\AddressFormat\AddressField;
 use CommerceGuys\Addressing\AddressFormat\AddressFormat;
 use CommerceGuys\Addressing\AddressFormat\AddressFormatRepositoryInterface;
 use CommerceGuys\Addressing\Country\CountryRepositoryInterface;
+use CommerceGuys\Addressing\LocaleHelper;
 use CommerceGuys\Addressing\Subdivision\SubdivisionRepositoryInterface;
 use Drupal\address\AddressInterface;
 use Drupal\Core\Field\FormatterBase;
@@ -175,29 +176,42 @@ class AddressPlainFormatter extends FormatterBase implements ContainerFactoryPlu
       $values[$field] = $address->$getter();
     }
 
-    foreach ($address_format->getUsedSubdivisionFields() as $field) {
+    $original_values = [];
+    $subdivision_fields = $address_format->getUsedSubdivisionFields();
+    $parents = [];
+    foreach ($subdivision_fields as $index => $field) {
       $value = $values[$field];
       // The template needs access to both the subdivision code and name.
       $values[$field] = [
-        'code' => '',
-        'name' => $value,
+        'code' => $value,
+        'name' => '',
       ];
 
       if (empty($value)) {
         // This level is empty, so there can be no sublevels.
         break;
       }
-      $subdivision = $this->subdivisionRepository->get($value, $address->getLocale());
+      $parents[] = $index ? $original_values[$subdivision_fields[$index - 1]] : $address->getCountryCode();
+      $subdivision = $this->subdivisionRepository->get($value, $parents);
       if (!$subdivision) {
-        // This level has no predefined subdivisions, stop.
         break;
       }
 
-      // Replace the subdivision values with the predefined ones.
-      $values[$field] = [
-        'code' => $subdivision->getCode(),
-        'name' => $subdivision->getName(),
-      ];
+      // Remember the original value so that it can be used for $parents.
+      $original_values[$field] = $values[$field];
+      // Replace the value with the expected code.
+      if (LocaleHelper::match($address->getLocale(), $subdivision->getLocale())) {
+        $values[$field] = [
+          'code' => $subdivision->getLocalCode(),
+          'name' => $subdivision->getLocalName(),
+        ];
+      }
+      else {
+        $values[$field] = [
+          'code' => $subdivision->getCode(),
+          'name' => $subdivision->getName(),
+        ];
+      }
 
       if (!$subdivision->hasChildren()) {
         // The current subdivision has no children, stop.

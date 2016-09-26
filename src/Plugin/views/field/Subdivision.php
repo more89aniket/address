@@ -2,13 +2,14 @@
 
 namespace Drupal\address\Plugin\views\field;
 
+use CommerceGuys\Addressing\LocaleHelper;
 use CommerceGuys\Addressing\Repository\SubdivisionRepositoryInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Displays the subdivision name instead of the id.
+ * Displays the subdivision.
  *
  * @ingroup views_field_handlers
  *
@@ -63,27 +64,37 @@ class Subdivision extends FieldPluginBase {
     }
 
     $entity = $this->getEntity($values);
+    /** @var \Drupal\address\AddressInterface $address */
     $address = $entity->{$this->definition['field_name']}->first();
     switch ($this->definition['property']) {
       case 'administrative_area':
-        $parent_id = NULL;
-        $needs_parent = FALSE;
+        $code = $address->getAdministrativeArea();
+        $parents = [
+          $address->getCountryCode(),
+        ];
         break;
       case 'locality':
-        $parent_id = $address->administrative_area;
-        $needs_parent = TRUE;
+        $code = $address->getLocality();
+        $parents = [
+          $address->getCountryCode(),
+          $address->getAdministrativeArea(),
+        ];
         break;
       case 'dependent_locality':
-        $parent_id = $address->locality;
-        $needs_parent = TRUE;
+        $code = $address->getDependentLocality();
+        $parents = [
+          $address->getCountryCode(),
+          $address->getAdministrativeArea(),
+          $address->getLocality(),
+        ];
         break;
     }
-
-    if (!$needs_parent || !empty($parent_id)) {
-      $subdivisions = $this->subdivisionRepository->getList($address->country_code, $parent_id);
-      if (isset($subdivisions[$value])) {
-        $value = $subdivisions[$value];
-      }
+    /** @var \CommerceGuys\Addressing\Subdivision\Subdivision $subdivision */
+    $subdivision = $this->subdivisionRepository->get($code, $parents);
+    // @todo Allow a choice between subdivision code and name.
+    if ($subdivision) {
+      $use_local_name = LocaleHelper::match($address->getLocale(), $subdivision->getLocale());
+      $value = $use_local_name ? $subdivision->getLocalName() : $subdivision->getName();
     }
 
     return $this->sanitizeValue($value);

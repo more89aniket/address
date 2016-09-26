@@ -35,7 +35,7 @@ class AddressTestEventSubscriber implements EventSubscriberInterface {
   public function getInitialValues() {
     return [
       'country_code' => 'AU',
-      'administrative_area' => 'AU-NSW',
+      'administrative_area' => 'NSW',
       'locality' => 'Sydney',
       'dependent_locality' => '',
       'postal_code' => '2000',

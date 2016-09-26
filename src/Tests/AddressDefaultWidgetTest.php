@@ -185,7 +185,7 @@ class AddressDefaultWidgetTest extends WebTestBase {
       'organization' => 'Some Organization',
       'address_line1' => '1098 Alta Ave',
       'locality' => 'Mountain View',
-      'administrative_area' => 'US-CA',
+      'administrative_area' => 'CA',
       'postal_code' => '94043',
     ];
     $edit = [];
@@ -337,7 +337,7 @@ class AddressDefaultWidgetTest extends WebTestBase {
     $edit[$field_name . '[0][address_line1]'] = '1098 Alta Ave';
     $edit[$field_name . '[0][address_line2]'] = 'Street 2';
     $edit[$field_name . '[0][locality]'] = 'Mountain View';
-    $edit[$field_name . '[0][administrative_area]'] = 'US-CA';
+    $edit[$field_name . '[0][administrative_area]'] = 'CA';
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertResponse(200);
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
@@ -351,31 +351,31 @@ class AddressDefaultWidgetTest extends WebTestBase {
     $field_name = $this->field->getName();
     // Using China since it has predefined subdivisions on all three levels.
     $country = 'CN';
-    $administrativeArea = 'CN-13';
-    $locality = 'CN-13-2c7460';
-    $administrativeAreas = $this->subdivisionRepository->getList($country);
-    $localities = $this->subdivisionRepository->getList($country, $administrativeArea);
-    $dependentLocalities = $this->subdivisionRepository->getList($country, $locality);
+    $administrative_area = 'Hebei Sheng';
+    $locality = 'Chengde Shi';
+    $administrative_areas = $this->subdivisionRepository->getList([$country]);
+    $localities = $this->subdivisionRepository->getList([$country, $administrative_area]);
+    $dependent_localities = $this->subdivisionRepository->getList([$country, $administrative_area, $locality]);
     // Confirm the presence and format of the administrative area dropdown.
     $edit = [];
     $edit[$field_name . '[0][country_code]'] = $country;
     $this->drupalPostAjaxForm($this->nodeAddUrl, $edit, $field_name . '[0][country_code]');
-    $this->assertOptions($field_name . '[0][administrative_area]', array_keys($administrativeAreas), 'All administrative areas for country ' . $country . ' are present.');
+    $this->assertOptions($field_name . '[0][administrative_area]', array_keys($administrative_areas), 'All administrative areas for country ' . $country . ' are present.');
 
     // Confirm the presence and format of the locality dropdown.
     $edit = [];
-    $edit[$field_name . '[0][administrative_area]'] = $administrativeArea;
+    $edit[$field_name . '[0][administrative_area]'] = $administrative_area;
     $this->drupalPostAjaxForm(NULL, $edit, $field_name . '[0][administrative_area]');
     $this->assertResponse(200);
-    $this->assertOptionSelectedWithDrupalSelector('edit-field-address-0-administrative-area', $administrativeArea, 'Selected administrative area ' . $administrativeAreas[$administrativeArea]);
-    $this->assertOptions($field_name . '[0][locality]', array_keys($localities), 'All localities for administrative area ' . $administrativeAreas[$administrativeArea] . ' are present.');
+    $this->assertOptionSelectedWithDrupalSelector('edit-field-address-0-administrative-area', $administrative_area, 'Selected administrative area ' . $administrative_areas[$administrative_area]);
+    $this->assertOptions($field_name . '[0][locality]', array_keys($localities), 'All localities for administrative area ' . $administrative_areas[$administrative_area] . ' are present.');
 
     // Confirm the presence and format of the dependent locality dropdown.
     $edit[$field_name . '[0][locality]'] = $locality;
     $this->drupalPostAjaxForm(NULL, $edit, $field_name . '[0][locality]');
     $this->assertResponse(200);
     $this->assertOptionSelectedWithDrupalSelector('edit-field-address-0-locality', $locality, 'Selected locality ' . $localities[$locality]);
-    $this->assertOptions($field_name . '[0][dependent_locality]', array_keys($dependentLocalities), 'All dependent localities for locality ' . $localities[$locality] . ' are present.');
+    $this->assertOptions($field_name . '[0][dependent_locality]', array_keys($dependent_localities), 'All dependent localities for locality ' . $localities[$locality] . ' are present.');
   }
 
   /**
@@ -393,7 +393,7 @@ class AddressDefaultWidgetTest extends WebTestBase {
     $edit[$field_name . '[0][address_line1]'] = '1098 Alta Ave';
     $edit[$field_name . '[0][address_line2]'] = 'Street 2';
     $edit[$field_name . '[0][locality]'] = 'Mountain View';
-    $edit[$field_name . '[0][administrative_area]'] = 'US-CA';
+    $edit[$field_name . '[0][administrative_area]'] = 'CA';
     $edit[$field_name . '[0][postal_code]'] = '94043';
     $this->drupalPostForm($this->nodeAddUrl, $edit, t('Save'));
     $this->assertResponse(200);
@@ -401,7 +401,7 @@ class AddressDefaultWidgetTest extends WebTestBase {
 
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertFieldByName($field_name . '[0][country_code]', 'US');
-    $this->assertFieldByName($field_name . '[0][administrative_area]', 'US-CA');
+    $this->assertFieldByName($field_name . '[0][administrative_area]', 'CA');
     $this->assertFieldByName($field_name . '[0][locality]', 'Mountain View');
     $this->assertFieldByName($field_name . '[0][postal_code]', '94043');
 
@@ -436,13 +436,13 @@ class AddressDefaultWidgetTest extends WebTestBase {
    */
   protected function assertOptions($id, $options, $message) {
     $elements = $this->xpath('//select[@name="' . $id . '"]/option/@value');
-    $foundOptions = [];
+    $found_options = [];
     foreach ($elements as $key => $element) {
       if ($option = $element->__toString()) {
-        $foundOptions[] = $option;
+        $found_options[] = $option;
       }
     }
-    $this->assertFieldValues($foundOptions, $options, $message);
+    $this->assertFieldValues($found_options, $options, $message);
   }
 
   /**
