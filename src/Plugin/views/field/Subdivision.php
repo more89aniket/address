@@ -3,7 +3,7 @@
 namespace Drupal\address\Plugin\views\field;
 
 use CommerceGuys\Addressing\LocaleHelper;
-use CommerceGuys\Addressing\Repository\SubdivisionRepositoryInterface;
+use CommerceGuys\Addressing\Subdivision\SubdivisionRepositoryInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -20,7 +20,7 @@ class Subdivision extends FieldPluginBase {
   /**
    * The subdivision repository.
    *
-   * @var \CommerceGuys\Addressing\Repository\SubdivisionRepositoryInterface
+   * @var \CommerceGuys\Addressing\Subdivision\SubdivisionRepositoryInterface
    */
   protected $subdivisionRepository;
 
@@ -33,7 +33,7 @@ class Subdivision extends FieldPluginBase {
    *   The id of the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \CommerceGuys\Addressing\Repository\SubdivisionRepositoryInterface $subdivision_repository
+   * @param \CommerceGuys\Addressing\Subdivision\SubdivisionRepositoryInterface $subdivision_repository
    *   The subdivision repository.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, SubdivisionRepositoryInterface $subdivision_repository) {
