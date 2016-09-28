@@ -131,6 +131,9 @@ function address_update_8101() {
           $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
         }
       }
+      // Load the installed field schema so that it can be updated.
+      $schema_key = "$entity_type_id.field_schema_data.$field_name";
+      $field_schema_data = $entity_storage_schema_sql->get($schema_key);
 
       $processed_fields[] = [$entity_type_id, $field_name];
       // Loop over each new column and add it as a schema column change.
@@ -152,22 +155,31 @@ function address_update_8101() {
           $schema->addField($revision_table, $column, $spec);
         }
 
-        // Update the installed storage schema for this field as well.
-        $key = "$entity_type_id.field_schema_data.$field_name";
-        if ($field_schema_data = $entity_storage_schema_sql->get($key)) {
-          $field_schema_data[$table]['fields'][$column_id] = $field_schema['columns'][$column_id];
-          $entity_storage_schema_sql->set($key, $field_schema_data);
+        // Add the new column to the installed field schema.
+        if ($field_schema_data) {
+          $field_schema_data[$table]['fields'][$column] = $field_schema['columns'][$column_id];
+          $field_schema_data[$table]['fields'][$column]['not null'] = FALSE;
           if ($revision_table) {
-            $field_schema_data[$revision_table]['fields'][$column_id] = $field_schema['columns'][$column_id];
-            $entity_storage_schema_sql->set($key, $field_schema_data);
+            $field_schema_data[$revision_table]['fields'][$column] = $field_schema['columns'][$column_id];
+            $field_schema_data[$revision_table]['fields'][$column]['not null'] = FALSE;
           }
         }
-        if ($table_mapping->allowsSharedTableStorage($field_storage_definition)) {
-          $key = "$entity_type_id.field_storage_definitions";
-          if ($definitions = $entity_definitions_installed->get($key)) {
-            $definitions[$field_name] = $field_storage_definition;
-            $entity_definitions_installed->set($key, $definitions);
-          }
+      }
+
+      // Save changes to the installed field schema.
+      if ($field_schema_data) {
+        $recipient_column = $table_mapping->getFieldColumnName($field_storage_definition, 'recipient');
+        unset($field_schema_data[$table]['fields'][$recipient_column]);
+        if ($revision_table) {
+          unset($field_schema_data[$revision_table]['fields'][$recipient_column]);
+        }
+        $entity_storage_schema_sql->set($schema_key, $field_schema_data);
+      }
+      if ($table_mapping->allowsSharedTableStorage($field_storage_definition)) {
+        $key = "$entity_type_id.field_storage_definitions";
+        if ($definitions = $entity_definitions_installed->get($key)) {
+          $definitions[$field_name] = $field_storage_definition;
+          $entity_definitions_installed->set($key, $definitions);
         }
       }
       // Once all columns added, and data copied. Delete the field.
