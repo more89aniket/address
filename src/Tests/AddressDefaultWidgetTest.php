@@ -434,7 +434,7 @@ class AddressDefaultWidgetTest extends WebTestBase {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertOptions($id, $options, $message) {
+  protected function assertOptions($id, $options, $message = '') {
     $elements = $this->xpath('//select[@name="' . $id . '"]/option/@value');
     $found_options = [];
     foreach ($elements as $key => $element) {

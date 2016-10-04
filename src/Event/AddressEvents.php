@@ -12,8 +12,7 @@ final class AddressEvents {
    *
    * @Event
    *
-   * @see \Drupal\address\Event\AddressFormatDefinitionEvent
-   * @see \CommerceGuys\Addressing\AddressFormat\AddressFormat
+   * @see \Drupal\address\Event\AddressFormatEvent
    */
   const ADDRESS_FORMAT = 'address.address_format';
 

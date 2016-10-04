@@ -19,12 +19,12 @@ class AddressTestEventSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Generate a set of available countries.
+   * Generates a set of available countries.
    *
-   * @return array Array of countries.
+   * @return array The countries.
    */
   public function getAvailableCountries() {
-    return ['AU' => 'AU', 'BR' => 'BR', 'CA' => 'CA', 'FR' => 'FR', 'JP' => 'JP'];
+    return ['AU' => 'AU', 'BR' => 'BR', 'CA' => 'CA', 'GB' => 'GB', 'JP' => 'JP'];
   }
 
   /**
@@ -49,18 +49,20 @@ class AddressTestEventSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Set available countries in the available countries event.
+   * Alters the available countries.
    *
    * @param \Drupal\address\Event\AvailableCountriesEvent $event
+   *   The available countries event.
    */
   public function onAvailableCountries(AvailableCountriesEvent $event) {
     $event->setAvailableCountries($this->getAvailableCountries());
   }
 
   /**
-   * Set initial values in the initial values event.
+   * Alters the initial values.
    *
    * @param \Drupal\address\Event\InitialValuesEvent $event
+   *   The initial values event.
    */
   public function onInitialValues(InitialValuesEvent $event) {
     $event->setInitialValues($this->getInitialValues());
