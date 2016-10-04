@@ -34,4 +34,13 @@ final class AddressEvents {
    */
   const INITIAL_VALUES = 'address.widget.initial_values';
 
+  /**
+   * Name of the event fired when defining custom subdivisions.
+   *
+   * @Event
+   *
+   * @see \Drupal\address\Event\SubdivisionsEvent
+   */
+  const SUBDIVISIONS = 'address.subdivisions';
+
 }

@@ -270,6 +270,21 @@ class AddressDefaultWidgetTest extends WebTestBase {
         $this->assertFieldByName($name, $value, 'Field ' . $key . ' set to initial value ' . $value . ' by the event subscriber.');
       }
     }
+    // Test the GB counties.
+    $expected_counties = [
+      'Anglesey', 'Blaenau Gwent', 'Bridgend', 'Caerphilly', 'Cardiff',
+      'Carmarthenshire', 'Ceredigion', 'Conwy', 'Denbighshire', 'Flintshire',
+      'Gwynedd', 'Merthyr Tydfil', 'Monmouthshire', 'Neath Port Talbot',
+      'Newport', 'Pembrokeshire', 'Powys', 'Rhondda Cynon Taf', 'Swansea',
+      'Tarfaen', 'Vale of Glamorgan', 'Wrexham',
+    ];
+    $edit = [];
+    $edit[$field_name . '[0][country_code]'] = 'GB';
+    $this->drupalPostAjaxForm($this->nodeAddUrl, $edit, $field_name . '[0][country_code]');
+    $this->assertText(t('County'));
+    $this->assertFieldByName($field_name . '[0][administrative_area]');
+    $this->assertOptions($field_name . '[0][administrative_area]', $expected_counties);
+
     // Remove the address_test module.
     array_pop(self::$modules);
   }

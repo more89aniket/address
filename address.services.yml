@@ -9,7 +9,7 @@ services:
 
   address.subdivision_repository:
     class: Drupal\address\Repository\SubdivisionRepository
-    arguments: ['@address.address_format_repository', '@cache.data']
+    arguments: ['@address.address_format_repository', '@event_dispatcher', '@cache.data']
 
   address.zone_repository:
     class: Drupal\address\Repository\ZoneRepository
