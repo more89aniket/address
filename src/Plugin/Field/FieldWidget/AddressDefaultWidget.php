@@ -53,22 +53,6 @@ class AddressDefaultWidget extends WidgetBase implements ContainerFactoryPluginI
   protected $configFactory;
 
   /**
-   * The size attributes for fields likely to be inlined.
-   *
-   * @var array
-   */
-  protected $sizeAttributes = [
-    AddressField::ADMINISTRATIVE_AREA => 30,
-    AddressField::LOCALITY => 30,
-    AddressField::DEPENDENT_LOCALITY => 30,
-    AddressField::POSTAL_CODE => 10,
-    AddressField::SORTING_CODE => 10,
-    AddressField::GIVEN_NAME => 25,
-    AddressField::ADDITIONAL_NAME => 25,
-    AddressField::FAMILY_NAME => 25,
-  ];
-
-  /**
    * Constructs a AddressDefaultWidget object.
    *
    * @param string $plugin_id
@@ -230,7 +214,8 @@ class AddressDefaultWidget extends WidgetBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state) {
-    return NestedArray::getValue($element['address'], $violation->arrayPropertyPath);
+    $error_element = NestedArray::getValue($element['address'], $violation->arrayPropertyPath);
+    return is_array($error_element) ? $error_element : FALSE;
   }
 
   /**
