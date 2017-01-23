@@ -131,6 +131,10 @@ class Address extends FormElement {
     $country_list = $full_country_list;
     if (!empty($element['#available_countries'])) {
       $available_countries = $element['#available_countries'];
+      if (!empty($element['#default_value']['country_code'])) {
+        // The current country should always be available.
+        $available_countries[] = $element['#default_value']['country_code'];
+      }
       $available_countries = array_combine($available_countries, $available_countries);
       $country_list = array_intersect_key($country_list, $available_countries);
     }
@@ -140,15 +144,6 @@ class Address extends FormElement {
       // Fallback to the first country in the list if the default country
       // is empty even though the field is required.
       $value['country_code'] = key($country_list);
-    }
-    if (!empty($value['country_code']) && !isset($country_list[$value['country_code']])) {
-      // This item's country is no longer available. Add it back to the top
-      // of the list to ensure all data is displayed properly. The validator
-      // can then prevent the save and tell the user to change the country.
-      $missing_element = [
-        $value['country_code'] => $full_country_list[$value['country_code']],
-      ];
-      $country_list = $missing_element + $country_list;
     }
 
     $element += [
