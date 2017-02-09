@@ -55,6 +55,7 @@ class Address extends FormElement {
 
       '#input' => TRUE,
       '#multiple' => FALSE,
+      '#default_value' => NULL,
       '#process' => [
         [$class, 'processAddress'],
         [$class, 'processGroup'],
@@ -146,12 +147,13 @@ class Address extends FormElement {
       $value['country_code'] = key($country_list);
     }
 
-    $element += [
+    $element = [
+      '#tree' => TRUE,
       '#prefix' => '<div id="' . $wrapper_id . '">',
       '#suffix' => '</div>',
       // Pass the id along to other methods.
       '#wrapper_id' => $wrapper_id,
-    ];
+    ] + $element;
     $element['langcode'] = [
       '#type' => 'hidden',
       '#value' => $value['langcode'],
