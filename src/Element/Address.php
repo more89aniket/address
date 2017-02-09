@@ -22,7 +22,6 @@ use Drupal\Core\Render\Element\FormElement;
  * @code
  * $form['address'] = [
  *   '#type' => 'address',
- *   '#title' => $this->t('Address'),
  *   '#default_value' => [
  *     'given_name' => 'John',
  *     'family_name' => 'Smith',
