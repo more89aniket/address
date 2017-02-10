@@ -156,7 +156,7 @@ class AddressDefaultWidgetTest extends JavascriptTestBase {
    * - default_country widget setting.
    * - available_countries instance setting.
    */
-  function testCountries() {
+  public function testCountries() {
     $field_name = $this->field->getName();
     // Optional field: Country should be optional and set to default_country.
     $this->drupalGet($this->nodeAddUrl);
@@ -259,7 +259,7 @@ class AddressDefaultWidgetTest extends JavascriptTestBase {
   /**
    * Tests the initial values and available countries alter events.
    */
-  function testEvents() {
+  public function testEvents() {
     $field_name = $this->field->getName();
     // The address_test module is installed here, not in setUp().
     // This way the module's events will not affect other tests.
@@ -268,13 +268,13 @@ class AddressDefaultWidgetTest extends JavascriptTestBase {
     $this->container = $this->kernel->rebuildContainer();
     // Get available countries and initial values from module's event subscriber.
     $subscriber = \Drupal::service('address_test.event_subscriber');
-    $availableCountries = array_keys($subscriber->getAvailableCountries());
-    $initialValues = $subscriber->getInitialValues();
+    $available_countries = array_keys($subscriber->getAvailableCountries());
+    $initial_values = $subscriber->getInitialValues();
     // Access the content add form and test the list of countries.
     $this->drupalGet($this->nodeAddUrl);
-    $this->assertOptions($field_name . '[0][address][country_code]', $availableCountries, 'Available countries set in the event subscriber are present in the widget.');
+    $this->assertOptions($field_name . '[0][address][country_code]', $available_countries, 'Available countries set in the event subscriber are present in the widget.');
     // Test the values of the fields.
-    foreach ($initialValues as $key => $value) {
+    foreach ($initial_values as $key => $value) {
       if ($value) {
         $name = $field_name . '[0][address][' . $key . ']';
         $this->assertSession()->fieldValueEquals($name, $value);
@@ -303,7 +303,7 @@ class AddressDefaultWidgetTest extends JavascriptTestBase {
   /**
    * Tests expected and disabled fields.
    */
-  function testFields() {
+  public function testFields() {
     $field_name = $this->field->getName();
     // Keys are field names from the field instance.
     // Values are corresponding field names from add article form.
@@ -379,7 +379,7 @@ class AddressDefaultWidgetTest extends JavascriptTestBase {
   /**
    * Tests the presence of subdivision dropdowns where expected.
    */
-  function testSubdivisions() {
+  public function testSubdivisions() {
     $field_name = $this->field->getName();
     // Using China since it has predefined subdivisions on all three levels.
     $country = 'CN';
@@ -410,7 +410,7 @@ class AddressDefaultWidgetTest extends JavascriptTestBase {
   /**
    * Tests that changing the country clears the expected values.
    */
-  function testClearValues() {
+  public function testClearValues() {
     $field_name = $this->field->getName();
     // Create an article with all fields filled.
     $this->drupalGet($this->nodeAddUrl);
@@ -469,7 +469,7 @@ class AddressDefaultWidgetTest extends JavascriptTestBase {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertOptions($id, $options, $message = '') {
+  protected function assertOptions($id, array $options, $message = '') {
     $elements = $this->xpath('//select[@name="' . $id . '"]/option');
     $found_options = [];
     foreach ($elements as $element) {
@@ -509,7 +509,7 @@ class AddressDefaultWidgetTest extends JavascriptTestBase {
    *   The field values.
    * @param array $expected_values
    *   The expected values.
-   * @param $message
+   * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message

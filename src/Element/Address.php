@@ -117,7 +117,7 @@ class Address extends FormElement {
    * @throws \InvalidArgumentException
    *   Thrown when #available_countries or #used_fields is malformed.
    */
-  public static function processAddress(&$element, FormStateInterface $form_state, &$complete_form) {
+  public static function processAddress(array &$element, FormStateInterface $form_state, array &$complete_form) {
     if (isset($element['#available_countries']) && !is_array($element['#available_countries'])) {
       throw new \InvalidArgumentException('The #available_countries property must be an array.');
     }
@@ -222,7 +222,8 @@ class Address extends FormElement {
     $locale = \Drupal::languageManager()->getConfigOverrideLanguage()->getId();
     if (LocaleHelper::match($address_format->getLocale(), $locale)) {
       $format_string = $address_format->getLocalFormat();
-    } else {
+    }
+    else {
       $format_string = $address_format->getFormat();
     }
     $grouped_fields = AddressFormatHelper::getGroupedFields($format_string);
@@ -399,6 +400,5 @@ class Address extends FormElement {
 
     return $element;
   }
-
 
 }

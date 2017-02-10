@@ -2,7 +2,6 @@
 
 namespace Drupal\address\Plugin\Field\FieldWidget;
 
-use CommerceGuys\Addressing\AddressFormat\AddressField;
 use CommerceGuys\Addressing\Country\CountryRepositoryInterface;
 use Drupal\address\Event\AddressEvents;
 use Drupal\address\Event\InitialValuesEvent;
@@ -13,7 +12,6 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
