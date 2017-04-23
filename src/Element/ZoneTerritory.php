@@ -3,13 +3,18 @@
 namespace Drupal\address\Element;
 
 use CommerceGuys\Addressing\AddressFormat\AddressFormat;
+use CommerceGuys\Addressing\AddressFormat\AddressField;
 use Drupal\address\FieldHelper;
 use Drupal\address\LabelHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\FormElement;
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Provides a zone territory form element.
+ *
+ * Use it to populate a \CommerceGuys\Addressing\Zone\ZoneTerritory object.
  *
  * Usage example:
  * @code
@@ -41,7 +46,6 @@ class ZoneTerritory extends FormElement {
         [$class, 'processGroup'],
       ],
       '#pre_render' => [
-        [$class, 'groupElements'],
         [$class, 'preRenderGroup'],
       ],
       '#after_build' => [
@@ -180,7 +184,7 @@ class ZoneTerritory extends FormElement {
         '#title' => $labels[$field],
         '#options' => $subdivisions,
         '#default_value' => $value[$property],
-        '#empty_option' => $this->t('- All -'),
+        '#empty_option' => t('- All -'),
       ];
       if ($current_depth < $depth) {
         $element[$property]['#ajax'] = [
@@ -216,14 +220,14 @@ class ZoneTerritory extends FormElement {
 
     $element['included_postal_codes'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Included postal codes'),
-      '#description' => $this->t('A regular expression ("/(35|38)[0-9]{3}/") or comma-separated list, including ranges ("98, 100:200")'),
+      '#title' => t('Included postal codes'),
+      '#description' => t('A regular expression ("/(35|38)[0-9]{3}/") or comma-separated list, including ranges ("98, 100:200")'),
       '#default_value' => $value['included_postal_codes'],
     ];
     $element['excluded_postal_codes'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Excluded postal codes'),
-      '#description' => $this->t('A regular expression ("/(35|38)[0-9]{3}/") or comma-separated list, including ranges ("98, 100:200")'),
+      '#title' => t('Excluded postal codes'),
+      '#description' => t('A regular expression ("/(35|38)[0-9]{3}/") or comma-separated list, including ranges ("98, 100:200")'),
       '#default_value' => $value['excluded_postal_codes'],
     ];
 

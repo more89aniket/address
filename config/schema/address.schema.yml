@@ -1,3 +1,26 @@
+zone_territory:
+  type: mapping
+  label: 'Zone territory'
+  mapping:
+    country_code:
+      type: string
+      label: 'Country'
+    administrative_area:
+      type: string
+      label: 'Administrative area'
+    locality:
+      type: string
+      label: 'Locality'
+    dependent_locality:
+      type: string
+      label: 'Dependent locality'
+    included_postal_codes:
+      type: string
+      label: 'Included postal codes'
+    excluded_postal_codes:
+      type: string
+      label: 'Excluded postal codes'
+
 field.value.address:
   type: mapping
   label: 'Default value'
