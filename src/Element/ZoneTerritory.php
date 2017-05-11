@@ -45,6 +45,9 @@ class ZoneTerritory extends FormElement {
         [$class, 'processTerritory'],
         [$class, 'processGroup'],
       ],
+      '#element_validate' => [
+        [$class, 'validatePostalCodeElements'],
+      ],
       '#pre_render' => [
         [$class, 'preRenderGroup'],
       ],
@@ -218,20 +221,58 @@ class ZoneTerritory extends FormElement {
       return $element;
     }
 
+    $element['limit_by_postal_code'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Limit by postal code'),
+      '#default_value' => !empty($value['included_postal_codes']) || !empty($value['excluded_postal_codes']),
+    ];
+    $checkbox_parents = array_merge($element['#parents'], ['limit_by_postal_code']);
+    $checkbox_path = array_shift($checkbox_parents);
+    $checkbox_path .= '[' . implode('][', $checkbox_parents) . ']';
+
     $element['included_postal_codes'] = [
       '#type' => 'textfield',
       '#title' => t('Included postal codes'),
       '#description' => t('A regular expression ("/(35|38)[0-9]{3}/") or comma-separated list, including ranges ("98, 100:200")'),
       '#default_value' => $value['included_postal_codes'],
+      '#states' => [
+        'visible' => [
+          ':input[name="' . $checkbox_path . '"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
     $element['excluded_postal_codes'] = [
       '#type' => 'textfield',
       '#title' => t('Excluded postal codes'),
       '#description' => t('A regular expression ("/(35|38)[0-9]{3}/") or comma-separated list, including ranges ("98, 100:200")'),
       '#default_value' => $value['excluded_postal_codes'],
+      '#states' => [
+        'visible' => [
+          ':input[name="' . $checkbox_path . '"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
 
     return $element;
+  }
+
+  /**
+   * Validates the postal code elements.
+   *
+   * @param array $element
+   *   The existing form element array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public static function validatePostalCodeElements(array $element, FormStateInterface $form_state) {
+    $value = $form_state->getValue($element['#parents']);
+    if (empty($value['limit_by_postal_code'])) {
+      // Remove postal code values if the main checkbox was unchecked.
+      unset($value['included_postal_codes']);
+      unset($value['excluded_postal_codes']);
+    }
+    unset($value['limit_by_postal_code']);
+    $form_state->setValue($element['#parents'], $value);
   }
 
   /**
