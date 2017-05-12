@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
- * Plugin implementation of the 'address' widget.
+ * Plugin implementation of the 'address_default' widget.
  *
  * @FieldWidget(
  *   id = "address_default",

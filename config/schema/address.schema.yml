@@ -91,6 +91,24 @@ field.widget.settings.address_default:
       type: string
       label: 'Default country'
 
+field.value.address_country:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: string
+      label: 'Country code'
+
+field.field_settings.address_country:
+  type: mapping
+  label: 'Country field settings'
+  mapping:
+    available_countries:
+      type: sequence
+      label: 'Available countries'
+      sequence:
+        - type: string
+
 views.filter.country_code:
   type: views.filter.in_operator
   label: 'Country'

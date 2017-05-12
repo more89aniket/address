@@ -78,27 +78,28 @@ class Address extends FormElement {
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if (is_array($input)) {
-      return $input;
+      $value = $input;
     }
     else {
       if (!is_array($element['#default_value'])) {
         $element['#default_value'] = [];
       }
-      // Initialize properties.
-      $properties = [
-        'given_name', 'additional_name', 'family_name', 'organization',
-        'address_line1', 'address_line2', 'postal_code', 'sorting_code',
-        'dependent_locality', 'locality', 'administrative_area',
-        'country_code', 'langcode',
-      ];
-      foreach ($properties as $property) {
-        if (!isset($element['#default_value'][$property])) {
-          $element['#default_value'][$property] = NULL;
-        }
-      }
-
-      return $element['#default_value'];
+      $value = $element['#default_value'];
     }
+    // Initialize default keys.
+    $properties = [
+      'given_name', 'additional_name', 'family_name', 'organization',
+      'address_line1', 'address_line2', 'postal_code', 'sorting_code',
+      'dependent_locality', 'locality', 'administrative_area',
+      'country_code', 'langcode',
+    ];
+    foreach ($properties as $property) {
+      if (!isset($value[$property])) {
+        $value[$property] = NULL;
+      }
+    }
+
+    return $value;
   }
 
   /**
@@ -115,36 +116,16 @@ class Address extends FormElement {
    *   The processed element.
    *
    * @throws \InvalidArgumentException
-   *   Thrown when #available_countries or #used_fields is malformed.
+   *   Thrown when #used_fields is malformed.
    */
   public static function processAddress(array &$element, FormStateInterface $form_state, array &$complete_form) {
-    if (isset($element['#available_countries']) && !is_array($element['#available_countries'])) {
-      throw new \InvalidArgumentException('The #available_countries property must be an array.');
-    }
     if (isset($element['#used_fields']) && !is_array($element['#used_fields'])) {
       throw new \InvalidArgumentException('The #used_fields property must be an array.');
     }
 
     $id_prefix = implode('-', $element['#parents']);
     $wrapper_id = Html::getUniqueId($id_prefix . '-ajax-wrapper');
-    $full_country_list = \Drupal::service('address.country_repository')->getList();
-    $country_list = $full_country_list;
-    if (!empty($element['#available_countries'])) {
-      $available_countries = $element['#available_countries'];
-      if (!empty($element['#default_value']['country_code'])) {
-        // The current country should always be available.
-        $available_countries[] = $element['#default_value']['country_code'];
-      }
-      $available_countries = array_combine($available_countries, $available_countries);
-      $country_list = array_intersect_key($country_list, $available_countries);
-    }
-
     $value = $element['#value'];
-    if (empty($value['country_code']) && $element['#required']) {
-      // Fallback to the first country in the list if the default country
-      // is empty even though the field is required.
-      $value['country_code'] = key($country_list);
-    }
 
     $element = [
       '#tree' => TRUE,
@@ -157,35 +138,19 @@ class Address extends FormElement {
       '#type' => 'hidden',
       '#value' => $value['langcode'],
     ];
-    // Hide the country dropdown when there is only one possible value.
-    if (count($country_list) == 1 && $element['#required']) {
-      $element['country_code'] = [
-        '#type' => 'hidden',
-        '#value' => key($available_countries),
-      ];
-    }
-    else {
-      $element['country_code'] = [
-        '#type' => 'select',
-        '#title' => t('Country'),
-        '#options' => $country_list,
-        '#default_value' => $value['country_code'],
-        '#required' => $element['#required'],
-        '#limit_validation_errors' => [],
-        '#ajax' => [
-          'callback' => [get_called_class(), 'ajaxRefresh'],
-          'wrapper' => $wrapper_id,
-        ],
-        '#attributes' => [
-          'class' => ['country'],
-          'autocomplete' => 'country',
-        ],
-        '#weight' => -100,
-      ];
-      if (!$element['#required']) {
-        $element['country_code']['#empty_value'] = '';
-      }
-    }
+    $element['country_code'] = [
+      '#type' => 'address_country',
+      '#title' => t('Country'),
+      '#available_countries' => $element['#available_countries'],
+      '#default_value' => $value['country_code'],
+      '#required' => $element['#required'],
+      '#limit_validation_errors' => [],
+      '#ajax' => [
+        'callback' => [get_called_class(), 'ajaxRefresh'],
+        'wrapper' => $wrapper_id,
+      ],
+      '#weight' => -100,
+    ];
     if (!empty($value['country_code'])) {
       $element = static::addressElements($element, $value);
     }
@@ -366,7 +331,7 @@ class Address extends FormElement {
    */
   public static function ajaxRefresh(array $form, FormStateInterface $form_state) {
     $country_element = $form_state->getTriggeringElement();
-    $address_element = NestedArray::getValue($form, array_slice($country_element['#array_parents'], 0, -1));
+    $address_element = NestedArray::getValue($form, array_slice($country_element['#array_parents'], 0, -2));
 
     return $address_element;
   }
