@@ -270,6 +270,7 @@ class Address extends FormElement {
       $subdivision_properties[] = FieldHelper::getPropertyName($field);
     }
     // Load and insert the subdivisions for each parent id.
+    $locale = \Drupal::languageManager()->getConfigOverrideLanguage()->getId();
     $current_depth = 1;
     $parents = [];
     foreach ($subdivision_properties as $index => $property) {
@@ -281,7 +282,7 @@ class Address extends FormElement {
         break;
       }
       $parents[] = $value[$parent_property];
-      $subdivisions = \Drupal::service('address.subdivision_repository')->getList($parents);
+      $subdivisions = \Drupal::service('address.subdivision_repository')->getList($parents, $locale);
       if (empty($subdivisions)) {
         break;
       }
