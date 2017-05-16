@@ -89,6 +89,8 @@ class AddressDefaultFormatterTest extends FormatterTestBase {
   public function testTaiwanAddress() {
     $language = \Drupal::languageManager()->getLanguage('zh-hant');
     \Drupal::languageManager()->setConfigOverrideLanguage($language);
+    // Reload the country repository for the new language to take effect.
+    $this->container->set('address.country_repository', NULL);
 
     $entity = EntityTest::create([]);
     $entity->{$this->fieldName} = [
