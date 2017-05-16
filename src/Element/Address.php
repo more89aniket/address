@@ -122,10 +122,13 @@ class Address extends FormElement {
     if (isset($element['#used_fields']) && !is_array($element['#used_fields'])) {
       throw new \InvalidArgumentException('The #used_fields property must be an array.');
     }
-
     $id_prefix = implode('-', $element['#parents']);
     $wrapper_id = Html::getUniqueId($id_prefix . '-ajax-wrapper');
     $value = $element['#value'];
+    if (empty($value['country_code']) && $element['#required']) {
+      // Preselect the default country so that the other elements can be shown.
+      $value['country_code'] = Country::getDefaultCountry($element['#available_countries']);
+    }
 
     $element = [
       '#tree' => TRUE,

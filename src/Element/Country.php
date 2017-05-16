@@ -73,12 +73,10 @@ class Country extends FormElement {
       $available_countries = array_combine($available_countries, $available_countries);
       $country_list = array_intersect_key($country_list, $available_countries);
     }
-
-    $value = $element['#value'];
-    if (empty($value) && $element['#required']) {
+    if (empty($element['#default_value']) && $element['#required']) {
       // Fallback to the first country in the list if the default country
       // is empty even though the field is required.
-      $value = key($country_list);
+      $element['#default_value'] = key($country_list);
     }
 
     $element['#tree'] = TRUE;
@@ -94,7 +92,7 @@ class Country extends FormElement {
         '#type' => 'select',
         '#title' => $element['#title'],
         '#options' => $country_list,
-        '#default_value' => $value,
+        '#default_value' => $element['#default_value'],
         '#required' => $element['#required'],
         '#limit_validation_errors' => [],
         '#attributes' => [
@@ -115,6 +113,29 @@ class Country extends FormElement {
     $element['country_code']['#parents'] = $element['#parents'];
 
     return $element;
+  }
+
+  /**
+   * Gets the default country based on the available countries.
+   *
+   * Used as a helper by parent form elements (Address, ZoneTerritory).
+   *
+   * @param array $available_countries
+   *   The available countries, an array of country codes.
+   *
+   * @return string
+   *   The default country.
+   */
+  public static function getDefaultCountry(array $available_countries = []) {
+    $full_country_list = \Drupal::service('address.country_repository')->getList();
+    $country_list = $full_country_list;
+    if (!empty($available_countries)) {
+      $available_countries = array_combine($available_countries, $available_countries);
+      $country_list = array_intersect_key($country_list, $available_countries);
+    }
+    $default_country = key($country_list);
+
+    return $default_country;
   }
 
 }

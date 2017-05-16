@@ -38,6 +38,9 @@ class ZoneTerritory extends FormElement {
   public function getInfo() {
     $class = get_class($this);
     return [
+      // List of country codes. If empty, all countries will be available.
+      '#available_countries' => [],
+
       '#input' => TRUE,
       '#multiple' => FALSE,
       '#default_value' => NULL,
@@ -63,26 +66,27 @@ class ZoneTerritory extends FormElement {
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if (is_array($input)) {
-      return $input;
+      $value = $input;
     }
     else {
       if (!is_array($element['#default_value'])) {
         $element['#default_value'] = [];
       }
-      // Initialize properties.
-      $properties = [
-        'country_code',
-        'administrative_area', 'locality', 'dependent_locality',
-        'included_postal_codes', 'excluded_postal_codes',
-      ];
-      foreach ($properties as $property) {
-        if (!isset($element['#default_value'][$property])) {
-          $element['#default_value'][$property] = NULL;
-        }
-      }
-
-      return $element['#default_value'];
+      $value = $element['#default_value'];
     }
+    // Initialize properties.
+    $properties = [
+      'country_code',
+      'administrative_area', 'locality', 'dependent_locality',
+      'included_postal_codes', 'excluded_postal_codes',
+    ];
+    foreach ($properties as $property) {
+      if (!isset($value[$property])) {
+        $value[$property] = NULL;
+      }
+    }
+
+    return $value;
   }
 
   /**
@@ -104,12 +108,10 @@ class ZoneTerritory extends FormElement {
   public static function processTerritory(array &$element, FormStateInterface $form_state, array &$complete_form) {
     $id_prefix = implode('-', $element['#parents']);
     $wrapper_id = Html::getUniqueId($id_prefix . '-ajax-wrapper');
-    $country_list = \Drupal::service('address.country_repository')->getList();
     $value = $element['#value'];
     if (empty($value['country_code']) && $element['#required']) {
-      // Fallback to the first country in the list if the default country
-      // is empty even though the field is required.
-      $value['country_code'] = key($country_list);
+      // Preselect the default country so that the other elements can be shown.
+      $value['country_code'] = Country::getDefaultCountry($element['#available_countries']);
     }
 
     $element = [
@@ -120,9 +122,9 @@ class ZoneTerritory extends FormElement {
       '#wrapper_id' => $wrapper_id,
     ] + $element;
     $element['country_code'] = [
-      '#type' => 'select',
+      '#type' => 'address_country',
       '#title' => t('Country'),
-      '#options' => $country_list,
+      '#available_countries' => $element['#available_countries'],
       '#default_value' => $value['country_code'],
       '#required' => $element['#required'],
       '#limit_validation_errors' => [],
@@ -280,7 +282,7 @@ class ZoneTerritory extends FormElement {
    */
   public static function ajaxRefresh(array $form, FormStateInterface $form_state) {
     $country_element = $form_state->getTriggeringElement();
-    $address_element = NestedArray::getValue($form, array_slice($country_element['#array_parents'], 0, -1));
+    $address_element = NestedArray::getValue($form, array_slice($country_element['#array_parents'], 0, -2));
 
     return $address_element;
   }
