@@ -19,7 +19,7 @@ use Drupal\Component\Utility\NestedArray;
  * Usage example:
  * @code
  * $form['territory'] = [
- *   '#type' => 'zone_territory',
+ *   '#type' => 'address_zone_territory',
  *   '#default_value' => [
  *     'country_code' => 'US',
  *     'administrative_area' => 'CA',
@@ -28,7 +28,7 @@ use Drupal\Component\Utility\NestedArray;
  * ];
  * @endcode
  *
- * @FormElement("zone_territory")
+ * @FormElement("address_zone_territory")
  */
 class ZoneTerritory extends FormElement {
 

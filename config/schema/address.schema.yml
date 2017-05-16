@@ -85,7 +85,7 @@ field.field_settings.address:
 
 field.widget.settings.address_default:
   type: mapping
-  label: 'Default address formatter settings'
+  label: 'Default address widget settings'
   mapping:
     default_country:
       type: string
@@ -108,6 +108,37 @@ field.field_settings.address_country:
       label: 'Available countries'
       sequence:
         - type: string
+
+field.value.address_zone:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    label:
+      type: label
+      label: 'Label'
+    territories:
+      type: sequence
+      label: 'Territories'
+      sequence:
+        - type: zone_territory
+
+field.field_settings.address_zone:
+  type: mapping
+  label: 'Zone field settings'
+  mapping:
+    available_countries:
+      type: sequence
+      label: 'Available countries'
+      sequence:
+        - type: string
+
+field.widget.settings.address_zone_default:
+  type: mapping
+  label: 'Default zone widget settings'
+  mapping:
+    show_label_field:
+      type: boolean
+      label: 'Show the zone label field'
 
 views.filter.country_code:
   type: views.filter.in_operator
