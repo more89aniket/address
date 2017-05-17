@@ -186,7 +186,7 @@ class AddressDefaultWidget extends WidgetBase implements ContainerFactoryPluginI
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $item = $items[$delta];
-    $value = $item->isEmpty() ? $this->getInitialValues() : $item->toArray();
+    $value = $item->getEntity()->isNew() ? $this->getInitialValues() : $item->toArray();
     // Calling initializeLangcode() every time, and not just when the field
     // is empty, ensures that the langcode can be changed on subsequent
     // edits (because the entity or interface language changed, for example).
