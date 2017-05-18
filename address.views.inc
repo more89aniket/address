@@ -43,6 +43,8 @@ function address_field_views_data(FieldStorageConfigInterface $field) {
       }
       // Add the custom country_code filter.
       $data[$table_name][$field_name . '_country_code']['filter']['id'] = 'country_code';
+      // Add the custom administrative_area filter.
+      $data[$table_name][$field_name . '_administrative_area']['filter']['id'] = 'administrative_area';
     }
   }
   elseif ($field_type == 'address_country') {
