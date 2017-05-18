@@ -1,29 +1,6 @@
-zone_territory:
+address:
   type: mapping
-  label: 'Zone territory'
-  mapping:
-    country_code:
-      type: string
-      label: 'Country'
-    administrative_area:
-      type: string
-      label: 'Administrative area'
-    locality:
-      type: string
-      label: 'Locality'
-    dependent_locality:
-      type: string
-      label: 'Dependent locality'
-    included_postal_codes:
-      type: string
-      label: 'Included postal codes'
-    excluded_postal_codes:
-      type: string
-      label: 'Excluded postal codes'
-
-field.value.address:
-  type: mapping
-  label: 'Default value'
+  label: 'Address'
   mapping:
     langcode:
       type: string
@@ -65,6 +42,58 @@ field.value.address:
       type: string
       label: 'Family name'
 
+address_zone:
+  type: mapping
+  label: 'Zone'
+  mapping:
+    label:
+      type: label
+      label: 'Label'
+    territories:
+      type: sequence
+      label: 'Territories'
+      sequence:
+        - type: address_zone_territory
+
+address_zone_territory:
+  type: mapping
+  label: 'Zone territory'
+  mapping:
+    country_code:
+      type: string
+      label: 'Country'
+    administrative_area:
+      type: string
+      label: 'Administrative area'
+    locality:
+      type: string
+      label: 'Locality'
+    dependent_locality:
+      type: string
+      label: 'Dependent locality'
+    included_postal_codes:
+      type: string
+      label: 'Included postal codes'
+    excluded_postal_codes:
+      type: string
+      label: 'Excluded postal codes'
+
+field.value.address:
+  type: address
+  label: 'Default value'
+
+field.value.address_country:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: string
+      label: 'Country code'
+
+field.value.address_zone:
+  type: address_zone
+  label: 'Default value'
+
 field.field_settings.address:
   type: mapping
   label: 'Address field settings'
@@ -83,22 +112,6 @@ field.field_settings.address:
       type: string
       label: 'Language override'
 
-field.widget.settings.address_default:
-  type: mapping
-  label: 'Default address widget settings'
-  mapping:
-    default_country:
-      type: string
-      label: 'Default country'
-
-field.value.address_country:
-  type: mapping
-  label: 'Default value'
-  mapping:
-    value:
-      type: string
-      label: 'Country code'
-
 field.field_settings.address_country:
   type: mapping
   label: 'Country field settings'
@@ -109,19 +122,6 @@ field.field_settings.address_country:
       sequence:
         - type: string
 
-field.value.address_zone:
-  type: mapping
-  label: 'Default value'
-  mapping:
-    label:
-      type: label
-      label: 'Label'
-    territories:
-      type: sequence
-      label: 'Territories'
-      sequence:
-        - type: zone_territory
-
 field.field_settings.address_zone:
   type: mapping
   label: 'Zone field settings'
@@ -131,6 +131,14 @@ field.field_settings.address_zone:
       label: 'Available countries'
       sequence:
         - type: string
+
+field.widget.settings.address_default:
+  type: mapping
+  label: 'Default address widget settings'
+  mapping:
+    default_country:
+      type: string
+      label: 'Default country'
 
 field.widget.settings.address_zone_default:
   type: mapping
