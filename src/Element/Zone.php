@@ -113,7 +113,6 @@ class Zone extends FormElement {
       $element_state['territories'] = $element_state['territories'] ?: [NULL];
       self::setElementState($element['#parents'], $form_state, $element_state);
     }
-    $element['#required'] = TRUE;
 
     $element = [
       '#tree' => TRUE,
