@@ -1,9 +1,5 @@
 {
   "require": {
-    "doctrine/collections": {
-      "version" : "v1.4.0",
-      "url": "https://github.com/doctrine/collections/archive/v1.4.0.zip"
-    },
     "commerceguys/enum": {
       "version" : "v1.0",
       "url": "https://github.com/commerceguys/enum/archive/v1.0.zip"
