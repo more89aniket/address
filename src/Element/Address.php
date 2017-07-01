@@ -348,7 +348,7 @@ class Address extends FormElement {
   }
 
   /**
-   * Clears the country-specific form values when the country changes.
+   * Clears dependent form values when the country or subdivision changes.
    *
    * Implemented as an #after_build callback because #after_build runs before
    * validation, allowing the values to be cleared early enough to prevent the
@@ -360,14 +360,22 @@ class Address extends FormElement {
       return $element;
     }
 
-    $triggering_element_name = end($triggering_element['#parents']);
-    if ($triggering_element_name == 'country_code') {
-      $keys = [
+    $keys = [
+      'country_code' => [
         'dependent_locality', 'locality', 'administrative_area',
         'postal_code', 'sorting_code',
-      ];
+      ],
+      'administrative_area' => [
+        'dependent_locality', 'locality',
+      ],
+      'locality' => [
+        'dependent_locality',
+      ],
+    ];
+    $triggering_element_name = end($triggering_element['#parents']);
+    if (isset($keys[$triggering_element_name])) {
       $input = &$form_state->getUserInput();
-      foreach ($keys as $key) {
+      foreach ($keys[$triggering_element_name] as $key) {
         $parents = array_merge($element['#parents'], [$key]);
         NestedArray::setValue($input, $parents, '');
         $element[$key]['#value'] = '';
