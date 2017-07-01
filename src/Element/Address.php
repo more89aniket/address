@@ -334,8 +334,15 @@ class Address extends FormElement {
    * Ajax callback.
    */
   public static function ajaxRefresh(array $form, FormStateInterface $form_state) {
-    $country_element = $form_state->getTriggeringElement();
-    $address_element = NestedArray::getValue($form, array_slice($country_element['#array_parents'], 0, -2));
+    $triggering_element = $form_state->getTriggeringElement();
+    $parents = $triggering_element['#array_parents'];
+    $triggering_element_name = array_pop($parents);
+    // The country_code element is nested one level deeper than
+    // the subdivision elements.
+    if ($triggering_element_name == 'country_code') {
+      array_pop($parents);
+    };
+    $address_element = NestedArray::getValue($form, $parents);
 
     return $address_element;
   }
