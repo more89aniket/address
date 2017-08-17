@@ -25,5 +25,3 @@ This will download the latest release of Address.
 Use 1.x-dev instead of ~1.0 to get the -dev release instead.
 
 See https://www.drupal.org/node/2404989 for more information.
-
-====forked====
